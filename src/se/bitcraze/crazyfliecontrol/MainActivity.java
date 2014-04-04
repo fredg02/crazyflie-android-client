@@ -67,7 +67,7 @@ import com.MobileAnarchy.Android.Widgets.Joystick.JoystickMovedListener;
 
 public class MainActivity extends Activity {
 
-    private static final String TAG = "CrazyflieControl";
+    private static final String LOG_TAG = "CrazyflieControl";
 
     private static final int MAX_THRUST = 65535;
 
@@ -328,7 +328,7 @@ public class MainActivity extends Activity {
 
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.d(TAG, "mUsbReceiver action: " + action);
+            Log.d(LOG_TAG, "mUsbReceiver action: " + action);
             if ((MainActivity.this.getPackageName()+".USB_PERMISSION").equals(action)) {
                 //reached only when USB permission on physical connect was canceled and "Connect" or "Radio Scan" is clicked
                 synchronized (this) {
@@ -338,26 +338,26 @@ public class MainActivity extends Activity {
                             Toast.makeText(MainActivity.this, "Crazyradio attached", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Log.d(TAG, "permission denied for device " + device);
+                        Log.d(LOG_TAG, "permission denied for device " + device);
                     }
                 }
             }
             if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                if (device != null && CrazyradioLink.isCrazyradio(device)) {
-                    Log.d(TAG, "Crazyradio detached");
+                if (device != null && UsbLinkAndroid.isCrazyradio(device)) {
+                    Log.d(LOG_TAG, "Crazyradio detached");
                     Toast.makeText(MainActivity.this, "Crazyradio detached", Toast.LENGTH_SHORT).show();
                     playSound(mSoundDisconnect);
                     if (mCrazyradioLink != null) {
-                        Log.d(TAG, "linkDisconnect()");
+                        Log.d(LOG_TAG, "linkDisconnect()");
                         linkDisconnect();
                     }
                 }
             }
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
                 UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                if (device != null && CrazyradioLink.isCrazyradio(device)) {
-                    Log.d(TAG, "Crazyradio attached");
+                if (device != null && UsbLinkAndroid.isCrazyradio(device)) {
+                    Log.d(LOG_TAG, "Crazyradio attached");
                     Toast.makeText(MainActivity.this, "Crazyradio attached", Toast.LENGTH_SHORT).show();
                     playSound(mSoundConnect);
                 }
@@ -381,7 +381,7 @@ public class MainActivity extends Activity {
 
         try {
             // create link
-            mCrazyradioLink = new CrazyradioLink(this, new CrazyradioLink.ConnectionData(radioChannel, radioDatarate));
+            mCrazyradioLink = new CrazyradioLink(new UsbLinkAndroid(this), new CrazyradioLink.ConnectionData(radioChannel, radioDatarate));
 
             // add listener for connection status
             mCrazyradioLink.addConnectionListener(new ConnectionAdapter() {
@@ -447,10 +447,10 @@ public class MainActivity extends Activity {
             });
             mSendJoystickDataThread.start();
         } catch (IllegalArgumentException e) {
-            Log.d(TAG, e.getMessage());
+            Log.d(LOG_TAG, e.getMessage());
             Toast.makeText(this, "Crazyradio not attached", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(LOG_TAG, e.getMessage());
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -492,8 +492,8 @@ public class MainActivity extends Activity {
             @Override
             protected ConnectionData[] doInBackground(Void... arg0) {
                 try {
-                    return CrazyradioLink.scanChannels(MainActivity.this);
-                } catch(IllegalStateException e) {
+                    return CrazyradioLink.scanChannels(new UsbLinkAndroid(MainActivity.this));
+                } catch(Exception e) {
                     mException = e;
                     return null;
                 }
