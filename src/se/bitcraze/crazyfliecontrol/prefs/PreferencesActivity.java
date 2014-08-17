@@ -29,11 +29,11 @@ package se.bitcraze.crazyfliecontrol.prefs;
 
 import java.io.IOException;
 
+import se.bitcraze.crazyflie.lib.CrazyradioLink;
+import se.bitcraze.crazyflie.lib.CrazyradioLink.ConnectionData;
 import se.bitcraze.crazyfliecontrol.R;
 import se.bitcraze.crazyfliecontrol.UsbLinkAndroid;
 import se.bitcraze.crazyfliecontrol.prefs.SelectConnectionDialogFragment.SelectCrazyflieDialogListener;
-import se.bitcraze.crazyflielib.CrazyradioLink;
-import se.bitcraze.crazyflielib.CrazyradioLink.ConnectionData;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -416,7 +416,8 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
                 try {
                     //For testing purposes only
 //                    return new ConnectionData[0];
-                    return CrazyradioLink.scanChannels(new UsbLinkAndroid(PreferencesActivity.this));
+                    CrazyradioLink crlink = new CrazyradioLink(new UsbLinkAndroid(PreferencesActivity.this));
+                    return crlink.scanChannels();
                 } catch(IllegalStateException e) {
                     mException = e;
                     return null;

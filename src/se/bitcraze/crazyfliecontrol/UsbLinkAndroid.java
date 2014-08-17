@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import se.bitcraze.crazyflielib.CrazyradioLink;
-import se.bitcraze.crazyflielib.IUsbLink;
+import se.bitcraze.crazyflie.lib.CrazyradioLink;
+import se.bitcraze.crazyflie.lib.IUsbLink;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +44,7 @@ public class UsbLinkAndroid implements IUsbLink{
 
     /**
      * Initialize the USB device. Determines endpoints and prepares communication.
-     * 
+     *
      * @throws IOException if the device cannot be opened
      */
     private void initDevice() throws IOException {
@@ -85,6 +85,9 @@ public class UsbLinkAndroid implements IUsbLink{
         }
     }
 
+    /* (non-Javadoc)
+     * @see se.bitcraze.crazyflie.lib.IUsbLink#sendControlTransfer(int, int, int, int, byte[])
+     */
     public int sendControlTransfer(int requestType, int request, int value, int index, byte[] data){
         if(mConnection != null){
             int dataLength = (data == null) ? 0 : data.length;
@@ -93,6 +96,9 @@ public class UsbLinkAndroid implements IUsbLink{
         return -1;
     }
 
+    /* (non-Javadoc)
+     * @see se.bitcraze.crazyflie.lib.IUsbLink#sendBulkTransfer(byte[], byte[])
+     */
     public int sendBulkTransfer(byte[] data, byte[] receiveData){
         int returnCode = -1;
         if(mConnection != null){
@@ -136,12 +142,21 @@ public class UsbLinkAndroid implements IUsbLink{
         return device;
     }
 
-    public static boolean isCrazyradio(UsbDevice device){
-        return device.getVendorId() == CrazyradioLink.VENDOR_ID &&
-               device.getProductId() == CrazyradioLink.PRODUCT_ID;
+    /* (non-Javadoc)
+     * @see se.bitcraze.crazyflie.lib.IUsbLink#getFirmwareVersion()
+     */
+    public float getFirmwareVersion() {
+        byte[] rawDescs = mConnection.getRawDescriptors();
+        return Float.parseFloat(Integer.toHexString(rawDescs[13]) + "." + Integer.toHexString(rawDescs[12]));
     }
 
-    @Override
+    public static boolean isCrazyradio(UsbDevice device){
+        return device.getVendorId() == CrazyradioLink.VENDOR_ID && device.getProductId() == CrazyradioLink.PRODUCT_ID;
+    }
+
+    /* (non-Javadoc)
+     * @see se.bitcraze.crazyflie.lib.IUsbLink#releaseInterface()
+     */
     public void releaseInterface() {
         if (mConnection != null && mIntf != null){
             mConnection.releaseInterface(mIntf);
@@ -150,7 +165,9 @@ public class UsbLinkAndroid implements IUsbLink{
         }
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see se.bitcraze.crazyflie.lib.IUsbLink#isUsbConnected()
+     */
     public boolean isUsbConnected() {
         return mUsbDevice != null && mConnection != null;
     }
