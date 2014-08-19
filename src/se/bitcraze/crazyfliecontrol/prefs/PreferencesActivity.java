@@ -416,8 +416,13 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
                 try {
                     //For testing purposes only
 //                    return new ConnectionData[0];
-                    CrazyradioLink crlink = new CrazyradioLink(new UsbLinkAndroid(PreferencesActivity.this));
-                    return crlink.scanChannels();
+                    UsbLinkAndroid usbLinkAndroid = new UsbLinkAndroid(PreferencesActivity.this);
+                    CrazyradioLink crlink = new CrazyradioLink(usbLinkAndroid);
+                    boolean useSlowScan = false;
+                    if(0.52f == usbLinkAndroid.getFirmwareVersion()){
+                        useSlowScan = true;
+                    }
+                    return crlink.scanChannels(useSlowScan);
                 } catch(IllegalStateException e) {
                     mException = e;
                     return null;
