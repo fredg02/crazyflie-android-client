@@ -30,6 +30,11 @@
                 android:summary="@string/preferences_radio_scan_summary"
                 android:title="@string/preferences_radio_scan" />
 
+        <Preference
+                android:key="pref_radio_stats"
+                android:summary="@string/preferences_radio_stats_summary"
+                android:title="@string/preferences_radio_stats" />
+
     </PreferenceScreen>
 
     <!-- Flight control settings -->

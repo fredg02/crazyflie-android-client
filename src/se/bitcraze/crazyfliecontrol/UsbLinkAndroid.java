@@ -150,6 +150,14 @@ public class UsbLinkAndroid implements IUsbLink{
         return Float.parseFloat(Integer.toHexString(rawDescs[13]) + "." + Integer.toHexString(rawDescs[12]));
     }
 
+    public String getSerialNumber() {
+        return mConnection.getSerial();
+    }
+
+    public boolean isCrazyradio(){
+        return isCrazyradio(mUsbDevice);
+    }
+
     public static boolean isCrazyradio(UsbDevice device){
         return device.getVendorId() == CrazyradioLink.VENDOR_ID && device.getProductId() == CrazyradioLink.PRODUCT_ID;
     }
