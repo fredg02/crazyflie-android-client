@@ -10,12 +10,12 @@ import android.widget.Toast;
 
 /**
  * This class encapsulates the common preferences for all types of controllers.
- * 
+ *
  * TODO: rename Class
  */
 public class Controls {
 
-    private static final String LOG_TAG = "Controls";
+//    private static final String LOG_TAG = "Controls";
 
     private MainActivity mActivity;
     private SharedPreferences mPreferences;
@@ -36,6 +36,8 @@ public class Controls {
     private int mMode; // Controller axis mapping (Mode 1-4)
     private float mDeadzone;
 
+    private int mControllerType;
+    private String mControllerTypeDefaultValue;
     private boolean mUseGyro;
 
     private String mModeDefaultValue;
@@ -55,6 +57,7 @@ public class Controls {
     private String mMaxThrustDefaultValue;
     private String mMinThrustDefaultValue;
 
+
     public Controls(MainActivity activity, SharedPreferences preferences) {
         this.mActivity = activity;
         this.mPreferences = preferences;
@@ -65,6 +68,8 @@ public class Controls {
         mDeadzoneDefaultValue = res.getString(R.string.preferences_deadzone_defaultValue);
 
         mTrimDefaultValue = res.getString(R.string.preferences_trim_defaultValue);
+
+        mControllerTypeDefaultValue = res.getString(R.string.preferences_controller_defaultValue);
 
         //Advanced flight control
         mMaxRollPitchAngleDefaultValue = res.getString(R.string.preferences_maxRollPitchAngle_defaultValue);
@@ -80,6 +85,7 @@ public class Controls {
         this.mRollTrim = Float.parseFloat(mPreferences.getString(PreferencesActivity.KEY_PREF_ROLLTRIM, mTrimDefaultValue));
         this.mPitchTrim = Float.parseFloat(mPreferences.getString(PreferencesActivity.KEY_PREF_PITCHTRIM, mTrimDefaultValue));
 
+        this.mControllerType = Integer.parseInt(mPreferences.getString(PreferencesActivity.KEY_PREF_CONTROLLER, mControllerTypeDefaultValue));
         this.mUseGyro = mPreferences.getBoolean(PreferencesActivity.KEY_PREF_USE_GYRO_BOOL, false);
 
         //Advanced flight control
@@ -167,6 +173,10 @@ public class Controls {
 
     public float getDeadzone() {
         return mDeadzone;
+    }
+
+    public int getControllerType() {
+        return mControllerType;
     }
 
     public boolean isUseGyro() {
