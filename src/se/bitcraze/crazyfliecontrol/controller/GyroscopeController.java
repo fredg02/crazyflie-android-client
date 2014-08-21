@@ -1,6 +1,7 @@
 package se.bitcraze.crazyfliecontrol.controller;
 
 import se.bitcraze.crazyfliecontrol.MainActivity;
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,11 +10,11 @@ import android.hardware.SensorManager;
 import com.MobileAnarchy.Android.Widgets.Joystick.DualJoystickView;
 
 /**
- * The GyroscopeController extends the TouchController and uses the gyroscope sensors 
+ * The GyroscopeController extends the TouchController and uses the gyroscope sensors
  * of the device to control the roll and pitch values.
  * The yaw and thrust values are still controlled by the touch controls according
  * to the chosen "mode" setting.
- * 
+ *
  */
 public class GyroscopeController extends TouchController implements SensorEventListener {
 
@@ -24,9 +25,9 @@ public class GyroscopeController extends TouchController implements SensorEventL
     private float mSensorRoll = 0;;
     private float mSensorPitch = 0;;
 
-    public GyroscopeController(Controls controls, MainActivity activity, DualJoystickView dualJoystickView, SensorManager sensorManager) {
+    public GyroscopeController(Controls controls, MainActivity activity, DualJoystickView dualJoystickView) {
         super(controls, activity, dualJoystickView);
-        mSensorManager = sensorManager;
+        mSensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
     }
 
     @Override
