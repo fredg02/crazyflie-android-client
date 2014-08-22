@@ -316,7 +316,19 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 
         if (key.equals(KEY_PREF_USE_GYRO_BOOL)) {
             CheckBoxPreference pref = (CheckBoxPreference) findPreference(key);
-            pref.setChecked(sharedPreferences.getBoolean(key, false));
+            boolean useGyro = sharedPreferences.getBoolean(key, false);
+            pref.setChecked(useGyro);
+            // automatically activate the screen rotation lock preference
+            CheckBoxPreference screenRotationLock = (CheckBoxPreference) findPreference(KEY_PREF_SCREEN_ROTATION_LOCK_BOOL);
+            if (useGyro) {
+                Toast.makeText(this, "Activated screen rotation lock...", Toast.LENGTH_LONG).show();
+                screenRotationLock.setSummary("Locked because gyroscope is used as controller.");
+            } else {
+                Toast.makeText(this, "Deactivated screen rotation lock...", Toast.LENGTH_LONG).show();
+                screenRotationLock.setSummary("");
+            }
+            screenRotationLock.setChecked(useGyro);
+            screenRotationLock.setEnabled(!useGyro);
         }
 
         // Gamepad and button mapping
