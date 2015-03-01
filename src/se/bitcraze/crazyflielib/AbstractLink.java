@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import se.bitcraze.crazyflielib.crtp.ConsolePacket;
+import se.bitcraze.crazyflielib.crtp.ParameterPacket;
 import android.util.Log;
 
 /**
@@ -109,9 +110,13 @@ public abstract class AbstractLink implements Link {
                     final ConsolePacket p = ConsolePacket.parse(Arrays.copyOfRange(data, 1, data.length));
                     Log.i(AbstractLink.class.getName(), "received console packet: " + p.getText());
                     break;
+                case ParameterPacket.PORT:
+                    //TODO: parse packet
+                    //Log.i(AbstractLink.class.getName(), "received parameter packet");
+                    break;
                     // TODO implement other types
                 default:
-                    Log.w(AbstractLink.class.getName(), "packet contains unknown port");
+                    Log.d(AbstractLink.class.getName(), "packet contains unknown port");
                     break;
             }
         }

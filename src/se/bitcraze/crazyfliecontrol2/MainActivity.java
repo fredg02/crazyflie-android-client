@@ -41,6 +41,7 @@ import se.bitcraze.crazyflielib.ConnectionAdapter;
 import se.bitcraze.crazyflielib.CrazyradioLink;
 import se.bitcraze.crazyflielib.Link;
 import se.bitcraze.crazyflielib.crtp.CommanderPacket;
+import se.bitcraze.crazyflielib.crtp.ParameterPacket;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -480,14 +481,19 @@ public class MainActivity extends Activity {
                 }
             });
 
-            // connect and start thread to periodically send commands containing
-            // the user input
+            // connect and start thread to periodically send commands containing the user input
             mLink.connect();
             mSendJoystickDataThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (mLink != null) {
-                        mLink.send(new CommanderPacket(mController.getRoll(), mController.getPitch(), mController.getYaw(), (char) (mController.getThrustAbsolute()), mControls.isXmode()));
+
+                        //Hacky Hover Mode
+                        if (mController instanceof GamepadController) {
+                            boolean hover = ((GamepadController) mController).isHover();
+                            mLink.send(new ParameterPacket(10, hover ? 1 : 0));
+                        }
+                        mLink.send(new CommanderPacket(mController.getRoll(), mController.getPitch(), mController.getYaw(), (char) mController.getThrustAbsolute(), mControls.isXmode()));
 
                         try {
                             Thread.sleep(20, 0);

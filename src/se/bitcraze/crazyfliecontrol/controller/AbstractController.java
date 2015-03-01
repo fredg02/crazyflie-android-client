@@ -41,7 +41,7 @@ public abstract class AbstractController implements IController {
 	protected boolean mIsDisabled;
 	protected MainActivity mActivity;
 
-    private static final int MAX_THRUST = 65535;
+    protected static final int MAX_THRUST = 65535;
 
 	public AbstractController(Controls controls, MainActivity activity) {
 		mControls = controls;
