@@ -225,13 +225,15 @@ public class GamepadController extends AbstractController {
      */
     public float getThrustAbsolute() {
         float thrust = getThrust();
+        float absThrust = thrust/100 * MAX_THRUST;
+
         //Hacky Hover Mode
-        if(thrust > 0 || (thrust < 0 && isHover())) {
-            float absThrust = thrust/100 * MAX_THRUST;
-            if (isHover()) {
-                return 32767 + ((absThrust/65535)*32767);
+        if(isHover()) {
+            return 32767 + ((absThrust/65535)*32767);
+        } else {
+            if(thrust > 0) {
+                return absThrust;
             }
-            return absThrust;
         }
         return 0;
     }
